@@ -337,8 +337,8 @@ async function main() {
     ],
   });
   check(
-    "COMPLIANCE: rejects payload with Amazon price (400)",
-    withPrice.status === 400,
+    "COMPLIANCE: rejects payload with Amazon price (422)",
+    withPrice.status === 422,
     `got ${withPrice.status}`,
   );
 
@@ -353,8 +353,8 @@ async function main() {
     ],
   });
   check(
-    "COMPLIANCE: rejects payload with Amazon rating/reviewCount (400)",
-    withRating.status === 400,
+    "COMPLIANCE: rejects payload with Amazon rating/reviewCount (422)",
+    withRating.status === 422,
     `got ${withRating.status}`,
   );
 
@@ -368,8 +368,8 @@ async function main() {
     ],
   });
   check(
-    "COMPLIANCE: rejects payload with Amazon imageUrl (400)",
-    withImage.status === 400,
+    "COMPLIANCE: rejects payload with Amazon imageUrl (422)",
+    withImage.status === 422,
     `got ${withImage.status}`,
   );
 
