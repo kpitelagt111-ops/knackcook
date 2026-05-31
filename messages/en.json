@@ -1,0 +1,114 @@
+{
+  "common": {
+    "siteName": "KnackCook",
+    "viewOnAmazon": "View on Amazon",
+    "addToWishlist": "Add to wishlist",
+    "removeFromWishlist": "Remove",
+    "search": "Search",
+    "readMore": "Read more",
+    "backToHome": "Back to home",
+    "subscribe": "Subscribe",
+    "loading": "Loading…"
+  },
+  "nav": {
+    "guides": "Guides",
+    "reviews": "Reviews",
+    "compare": "Compare",
+    "wishlist": "Wishlist",
+    "search": "Search the kitchen",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu"
+  },
+  "home": {
+    "title": "KnackCook — Smart picks for your kitchen",
+    "tagline": "Honest editorial reviews and buying guides for the best kitchen gear.",
+    "featured": "Featured products",
+    "latestArticles": "Latest guides",
+    "heroEyebrow": "Editorial · est. 2026",
+    "heroTitle": "Cookware, tested with care.",
+    "heroSubtitle": "Honest reviews and patient buying guides for the gear that actually earns a place on your counter — no fluff, no sponsored hot-takes.",
+    "heroCtaPrimary": "Browse the reviews",
+    "heroCtaSecondary": "Read the latest guide",
+    "trustBar": "Independent · Editorial scores out of 10 · No copied Amazon reviews",
+    "categoriesEyebrow": "By category",
+    "categoriesTitle": "Pick your corner of the kitchen.",
+    "categoriesKicker": "From dough hooks to whisks — curated lanes for the way you actually cook.",
+    "featuredEyebrow": "On the counter",
+    "featuredTitle": "Featured this season.",
+    "featuredKicker": "The pieces our editors keep reaching for, ranked by our own verdict score.",
+    "emptyProducts": "No published products yet. Ingest via n8n, then publish from the back office.",
+    "guidesEyebrow": "From the guides",
+    "guidesTitle": "Read before you buy.",
+    "guidesKicker": "Long-form, deeply reported buying guides — written for people who actually cook.",
+    "guidesEmpty": "No guides published yet."
+  },
+  "footer": {
+    "newsletterEyebrow": "The KnackCook letter",
+    "newsletterTitle": "Cooking gear, slowly considered.",
+    "newsletterSubtitle": "One thoughtful email a week — new reviews, deals worth your time, and reader questions answered. No spam, easy unsubscribe.",
+    "navTitle": "Explore",
+    "legalTitle": "The fine print",
+    "affiliate": "Affiliate Disclosure",
+    "privacy": "Privacy Policy",
+    "cookies": "Cookie Policy",
+    "legal": "Legal Notice",
+    "tagline": "Editorial reviews for the kitchen, since 2026.",
+    "copyright": "© {year} {siteName}. Built with care."
+  },
+  "newsletter": {
+    "placeholder": "you@example.com",
+    "submit": "Subscribe",
+    "loading": "Sending…",
+    "pending": "Check your inbox to confirm your subscription.",
+    "done": "You're already subscribed — thank you!",
+    "error": "Something went wrong. Try again."
+  },
+  "cookies": {
+    "message": "We use cookies for anonymous analytics. You can accept or reject non-essential cookies at any time.",
+    "accept": "Accept",
+    "reject": "Reject"
+  },
+  "product": {
+    "eyebrow": "Editorial review",
+    "ourVerdict": "Our verdict",
+    "verdictOf": "{score}/10",
+    "pros": "What we love",
+    "cons": "What to consider",
+    "review": "The full review",
+    "related": "You may also like",
+    "ctaHint": "Affiliate link · opens on Amazon"
+  },
+  "blog": {
+    "eyebrow": "Guides & reviews",
+    "title": "Guides &amp; reviews",
+    "kicker": "Long-form buying guides, head-to-head reviews and the occasional kitchen rant.",
+    "empty": "No published articles yet.",
+    "by": "by {author}",
+    "embeddedHeading": "Products in this guide"
+  },
+  "author": {
+    "articlesHeading": "Articles by {name}",
+    "noArticles": "No published articles yet."
+  },
+  "category": {
+    "empty": "No products in this category yet."
+  },
+  "search": {
+    "title": "Search",
+    "placeholder": "Search kitchen products…",
+    "resultCount": "{count, plural, =0 {No results} one {# result} other {# results}} for “{query}”",
+    "empty": "Start typing to find a review or guide."
+  },
+  "wishlist": {
+    "title": "Your wishlist",
+    "empty": "Your wishlist is empty. Add products from any product page."
+  },
+  "notFound": {
+    "title": "Page not found",
+    "subtitle": "We couldn't find what you were looking for. Maybe the page moved, maybe the link is stale.",
+    "cta": "Back to home"
+  },
+  "disclosure": {
+    "short": "As an Amazon Associate I earn from qualifying purchases."
+  }
+}

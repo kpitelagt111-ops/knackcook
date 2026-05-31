@@ -1,0 +1,14 @@
+# Local-dev only: publish service ports to the host so the Next.js app (run via
+# `pnpm dev` on the host) and Prisma migrations can reach them.
+# NOT used on the VPS (there, services talk over the internal Docker network).
+
+services:
+  postgres:
+    ports:
+      - "5432:5432"
+  redis:
+    ports:
+      - "6379:6379"
+  meilisearch:
+    ports:
+      - "7700:7700"

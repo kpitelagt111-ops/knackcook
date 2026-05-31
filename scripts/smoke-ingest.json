@@ -1,0 +1,19 @@
+{
+  "products": [
+    {
+      "asin": "B08XYZ1234",
+      "brand": "Acme",
+      "category": "Stand Mixers",
+      "marketplace": "amazon.com",
+      "editorialDraft": {
+        "title": "Acme Pro Stand Mixer",
+        "editorialReview": "Our rewritten, original take: a sturdy mixer that handles heavy dough with ease.",
+        "prosCons": {
+          "pros": ["Powerful motor", "Stable base"],
+          "cons": ["Heavy", "Loud at max speed"]
+        },
+        "editorialRating": 8.5
+      }
+    }
+  ]
+}

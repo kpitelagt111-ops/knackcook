@@ -1,0 +1,108 @@
+# KnackCook (affiliate-kk) — Docker Compose stack
+# Target: Hostinger KVM2 (2 vCPU / 8 GB). n8n already runs on the VPS (not here).
+# See docs/ARCHITECTURE.md §14. Memory limits per ARCHITECTURE §14.3.
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql://knackcook:${POSTGRES_PASSWORD:-knackcook}@postgres:5432/knackcook?schema=public
+      REDIS_URL: redis://redis:6379
+      MEILISEARCH_HOST: http://meilisearch:7700
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      meilisearch:
+        condition: service_started
+    ports:
+      - "3000:3000"
+    deploy:
+      resources:
+        limits:
+          memory: 1536m
+
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: knackcook
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-knackcook}
+      POSTGRES_DB: knackcook
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U knackcook -d knackcook"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    deploy:
+      resources:
+        limits:
+          memory: 1536m
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--maxmemory", "200mb", "--maxmemory-policy", "allkeys-lru"]
+    volumes:
+      - redisdata:/data
+    deploy:
+      resources:
+        limits:
+          memory: 256m
+
+  meilisearch:
+    image: getmeili/meilisearch:v1.12
+    restart: unless-stopped
+    environment:
+      MEILI_MASTER_KEY: ${MEILISEARCH_MASTER_KEY:-change-me-master-key}
+      MEILI_ENV: production
+    volumes:
+      - meilidata:/meili_data
+    deploy:
+      resources:
+        limits:
+          memory: 1024m
+
+  nginx:
+    image: nginx:1.27-alpine
+    restart: unless-stopped
+    depends_on:
+      - app
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./media:/var/app/media:ro
+    deploy:
+      resources:
+        limits:
+          memory: 128m
+
+  # Uptime Kuma — availability monitoring (HTTP probes, status page).
+  # See docs/MONITORING.md for alert thresholds. Memory budget fits KVM2
+  # (ARCHITECTURE §14.3): ~192MB stays within the ~2.5GB headroom for n8n+OS.
+  # Reverse-proxy via Nginx later; not exposed publicly by default.
+  uptime-kuma:
+    image: louislam/uptime-kuma:1
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    volumes:
+      - uptime-kuma-data:/app/data
+    deploy:
+      resources:
+        limits:
+          memory: 192m
+
+volumes:
+  pgdata:
+  redisdata:
+  meilidata:
+  uptime-kuma-data:
