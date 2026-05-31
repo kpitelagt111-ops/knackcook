@@ -15,7 +15,7 @@ test.describe("public site", () => {
   test("product page shows verdict, View on Amazon CTA with tracking href, and no $ price near CTA", async ({
     page,
   }) => {
-    const response = await page.goto("/en/products/acme-pro-stand-mixer");
+    const response = await page.goto("/en/products/artisancraft-compactpro-hand-mixer");
     expect(response?.status(), "product page should return 2xx").toBeLessThan(400);
 
     // Editorial verdict (REQ §2.2 — our rating, never Amazon's).
@@ -37,11 +37,13 @@ test.describe("public site", () => {
   });
 
   test("blog article embeds a product card linking to the product", async ({ page }) => {
-    const response = await page.goto("/en/blog/best-stand-mixers");
+    const response = await page.goto("/en/blog/best-stand-mixers-2026");
     expect(response?.status(), "blog page should return 2xx").toBeLessThan(400);
 
     // The embedded ProductCard is a link to /en/products/<slug> (the meaningful assertion).
-    const productLink = page.locator('a[href*="/products/acme-pro-stand-mixer"]').first();
+    const productLink = page
+      .locator('a[href*="/products/artisancraft-compactpro-hand-mixer"]')
+      .first();
     await expect(productLink).toBeVisible();
   });
 

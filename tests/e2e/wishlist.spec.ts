@@ -25,15 +25,18 @@ test.describe("wishlist", () => {
     await page.addInitScript(() => {
       window.localStorage.setItem(
         "kk:wishlist",
-        JSON.stringify(["acme-pro-stand-mixer", "artisancraft-compactpro-hand-mixer"]),
+        JSON.stringify([
+          "artisancraft-compactpro-hand-mixer",
+          "vitawhirl-highspeed-countertop-blender",
+        ]),
       );
     });
 
     await page.goto("/en/wishlist");
 
     // Both slugs render as links to their product page.
-    const linkA = page.locator('a[href$="/products/acme-pro-stand-mixer"]');
-    const linkB = page.locator('a[href$="/products/artisancraft-compactpro-hand-mixer"]');
+    const linkA = page.locator('a[href$="/products/artisancraft-compactpro-hand-mixer"]');
+    const linkB = page.locator('a[href$="/products/vitawhirl-highspeed-countertop-blender"]');
     await expect(linkA).toBeVisible();
     await expect(linkB).toBeVisible();
 
@@ -42,7 +45,10 @@ test.describe("wishlist", () => {
     expect(stored).not.toBeNull();
     const parsed = JSON.parse(stored ?? "[]") as string[];
     expect(parsed).toEqual(
-      expect.arrayContaining(["acme-pro-stand-mixer", "artisancraft-compactpro-hand-mixer"]),
+      expect.arrayContaining([
+        "artisancraft-compactpro-hand-mixer",
+        "vitawhirl-highspeed-countertop-blender",
+      ]),
     );
 
     // Remove the first item: the row exposes a "Remove" button (common.removeFromWishlist).

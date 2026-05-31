@@ -13,8 +13,8 @@ mkdirSync(dirname(REPORT_PATH), { recursive: true });
 const PAGES = [
   "/en",
   "/en/blog",
-  "/en/blog/best-stand-mixers",
-  "/en/products/acme-pro-stand-mixer",
+  "/en/blog/best-stand-mixers-2026",
+  "/en/products/artisancraft-compactpro-hand-mixer",
   "/en/category/stand-mixers",
   "/en/compare",
   "/en/search",

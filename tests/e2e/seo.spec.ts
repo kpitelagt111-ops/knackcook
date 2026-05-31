@@ -78,7 +78,7 @@ test.describe("JSON-LD on product page", () => {
   test("product page emits Product + Review (editorial rating) and BreadcrumbList — no AggregateRating", async ({
     page,
   }) => {
-    const response = await page.goto("/en/products/acme-pro-stand-mixer");
+    const response = await page.goto("/en/products/artisancraft-compactpro-hand-mixer");
     expect(response?.status()).toBeLessThan(400);
 
     const nodes = await extractJsonLd(page);
@@ -108,7 +108,7 @@ test.describe("JSON-LD on product page", () => {
 
 test.describe("JSON-LD on blog article", () => {
   test("blog article emits Article (with Person author) + BreadcrumbList", async ({ page }) => {
-    const response = await page.goto("/en/blog/best-stand-mixers");
+    const response = await page.goto("/en/blog/best-stand-mixers-2026");
     expect(response?.status()).toBeLessThan(400);
 
     const nodes = await extractJsonLd(page);
