@@ -32,10 +32,13 @@ describe("rateLimit — token bucket", () => {
   });
 
   it("refills over time", async () => {
-    const opts = { capacity: 1, refillPerSec: 1000 }; // 1000 tokens/sec → near-instant
+    // refillPerSec: 10 -> 1 token every 100ms. Slow enough that two
+    // synchronous calls cannot refill (CI inter-call latency << 100ms),
+    // and 150ms wait guarantees at least one refilled token.
+    const opts = { capacity: 1, refillPerSec: 10 };
     expect(rateLimit("r", opts).allowed).toBe(true);
     expect(rateLimit("r", opts).allowed).toBe(false);
-    await new Promise((r) => setTimeout(r, 20));
+    await new Promise((r) => setTimeout(r, 150));
     expect(rateLimit("r", opts).allowed).toBe(true);
   });
 });

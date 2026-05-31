@@ -193,6 +193,13 @@ jobs:
           BASE_URL: http://127.0.0.1:3000
         run: node scripts/n8n-mock.mjs
 
+      - name: Publish mock drafts (DRAFT -> PUBLISHED)
+        # n8n-mock.mjs creates DRAFT content (per AGENTS.md §7). In prod an editor
+        # publishes manually from the back office. For CI we run the existing
+        # publish-drafts.mjs script which scopes the publish to MOCK* ASINs only.
+        timeout-minutes: 2
+        run: node scripts/publish-drafts.mjs
+
       - name: Run Playwright E2E suite
         timeout-minutes: 8
         run: pnpm test:e2e
