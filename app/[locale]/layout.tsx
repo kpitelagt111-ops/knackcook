@@ -12,6 +12,11 @@ import "../globals.css";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://knackcook.com";
 
+// FIXME(deploy): Forced dynamic to unblock Docker build (postgres not reachable
+// during `docker compose build`). Re-enable ISR once `lib/db.ts` wraps queries
+// to return empty/null gracefully when DB is unreachable at build time.
+export const dynamic = "force-dynamic";
+
 const NO_FLASH_THEME_SCRIPT = `(function(){try{var t=localStorage.getItem('theme');var d=document.documentElement;d.classList.remove('light','dark');if(t==='light'){d.classList.add('light')}else{d.classList.add('dark')}}catch(e){document.documentElement.classList.add('dark')}})();`;
 
 /**
