@@ -82,6 +82,9 @@ services:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./media:/var/app/media:ro
       - /etc/ssl/knackcook:/etc/ssl/knackcook:ro
+    # Allow nginx to reach the staging app (separate compose project) via host.
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     deploy:
       resources:
         limits:

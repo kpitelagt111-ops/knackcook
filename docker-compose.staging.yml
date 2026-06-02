@@ -1,0 +1,85 @@
+# KnackCook — Staging stack (staging.knackcook.com)
+# Runs alongside prod on the SAME VPS, fully isolated:
+#  - Separate Postgres / Redis / Meilisearch volumes (no shared data)
+#  - Smaller memory limits (prod stays priority)
+#  - App binds to host port 3100 so prod nginx can proxy to it
+#  - No own nginx (prod nginx serves both prod + staging via Host header)
+#
+# Deploy command on VPS:
+#   cd /home/deploy/knackcook-staging
+#   git pull origin staging
+#   docker compose -f docker-compose.staging.yml -p knackcook-staging build app
+#   docker compose -f docker-compose.staging.yml -p knackcook-staging up -d
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql://knackcook:${POSTGRES_PASSWORD:-knackcook}@postgres:5432/knackcook?schema=public
+      REDIS_URL: redis://redis:6379
+      MEILISEARCH_HOST: http://meilisearch:7700
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      meilisearch:
+        condition: service_started
+    ports:
+      - "3100:3000"
+    deploy:
+      resources:
+        limits:
+          memory: 768m
+
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: knackcook
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-knackcook}
+      POSTGRES_DB: knackcook
+    volumes:
+      - pgdata-staging:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U knackcook -d knackcook"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    deploy:
+      resources:
+        limits:
+          memory: 512m
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--maxmemory", "100mb", "--maxmemory-policy", "allkeys-lru"]
+    volumes:
+      - redisdata-staging:/data
+    deploy:
+      resources:
+        limits:
+          memory: 128m
+
+  meilisearch:
+    image: getmeili/meilisearch:v1.12
+    restart: unless-stopped
+    environment:
+      MEILI_MASTER_KEY: ${MEILISEARCH_MASTER_KEY:-change-me-master-key}
+      MEILI_ENV: production
+    volumes:
+      - meilidata-staging:/meili_data
+    deploy:
+      resources:
+        limits:
+          memory: 512m
+
+volumes:
+  pgdata-staging:
+  redisdata-staging:
+  meilidata-staging:
