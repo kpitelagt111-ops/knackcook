@@ -24,12 +24,10 @@ ENV NEXT_TELEMETRY_DISABLED=1
 RUN addgroup --system --gid 1001 nodejs \
   && adduser --system --uid 1001 nextjs
 
-# Standalone server + static assets
-COPY --from=builder /app/public ./public
+# Standalone server + static assets (no public/ dir in this repo yet)
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-# Prisma engine + schema for migrations at runtime
-COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
+# Prisma engine + schema for migrations at runtime (Prisma 6: client lives in @prisma/client)
 COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
 COPY --from=builder /app/node_modules/prisma ./node_modules/prisma
 COPY --from=builder /app/prisma ./prisma
