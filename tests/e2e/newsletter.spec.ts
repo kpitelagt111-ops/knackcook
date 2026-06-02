@@ -21,7 +21,7 @@ test.describe("newsletter form", () => {
       });
     });
 
-    await page.goto("/en");
+    await page.goto("/");
 
     // The form lives in the footer — scroll into view to ensure it is hydrated.
     const emailInput = page.locator("#newsletter-email");
@@ -49,7 +49,7 @@ test.describe("newsletter form", () => {
       });
     });
 
-    await page.goto("/en");
+    await page.goto("/");
     const emailInput = page.locator("#newsletter-email");
     await emailInput.scrollIntoViewIfNeeded();
     await emailInput.fill("repeat@example.com");
@@ -72,7 +72,7 @@ test.describe("newsletter form", () => {
       });
     });
 
-    await page.goto("/en");
+    await page.goto("/");
     const emailInput = page.locator("#newsletter-email");
     await emailInput.scrollIntoViewIfNeeded();
     await emailInput.fill("not-an-email");

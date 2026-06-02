@@ -67,7 +67,7 @@ export function SiteHeader() {
         <div className="ml-auto flex items-center gap-3">
           <search className="hidden sm:block">
             <form
-              action="/en/search"
+              action="/search"
               className="flex items-center gap-2 rounded-full border border-border bg-surface px-3.5 py-2 shadow-soft transition-colors focus-within:border-ember-400 focus-within:shadow-card"
             >
               <SearchIcon className="size-4 text-muted" />

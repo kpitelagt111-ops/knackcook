@@ -54,15 +54,15 @@ test.describe("sitemap.xml", () => {
     expect(body).toContain("<urlset");
     expect(body).toContain("</urlset>");
 
-    // Homepage entry (locale-prefixed).
-    expect(body).toMatch(/<loc>[^<]*\/en<\/loc>/);
+    // Homepage entry (default locale served at root, no prefix).
+    expect(body).toMatch(/<loc>https?:\/\/[^/]+\/?<\/loc>/);
 
     // At least one published product URL.
-    const productLocMatch = body.match(/<loc>[^<]*\/en\/products\/[a-z0-9-]+<\/loc>/i);
+    const productLocMatch = body.match(/<loc>[^<]*\/products\/[a-z0-9-]+<\/loc>/i);
     expect(productLocMatch, "sitemap should list at least one published product").not.toBeNull();
 
     // At least one published blog article URL.
-    const blogLocMatch = body.match(/<loc>[^<]*\/en\/blog\/[a-z0-9-]+<\/loc>/i);
+    const blogLocMatch = body.match(/<loc>[^<]*\/blog\/[a-z0-9-]+<\/loc>/i);
     expect(blogLocMatch, "sitemap should list at least one published article").not.toBeNull();
 
     // Every <lastmod> entry parses as a valid Date.
@@ -78,7 +78,7 @@ test.describe("JSON-LD on product page", () => {
   test("product page emits Product + Review (editorial rating) and BreadcrumbList — no AggregateRating", async ({
     page,
   }) => {
-    const response = await page.goto("/en/products/artisancraft-compactpro-hand-mixer");
+    const response = await page.goto("/products/artisancraft-compactpro-hand-mixer");
     expect(response?.status()).toBeLessThan(400);
 
     const nodes = await extractJsonLd(page);
@@ -108,7 +108,7 @@ test.describe("JSON-LD on product page", () => {
 
 test.describe("JSON-LD on blog article", () => {
   test("blog article emits Article (with Person author) + BreadcrumbList", async ({ page }) => {
-    const response = await page.goto("/en/blog/best-stand-mixers-2026");
+    const response = await page.goto("/blog/best-stand-mixers-2026");
     expect(response?.status()).toBeLessThan(400);
 
     const nodes = await extractJsonLd(page);

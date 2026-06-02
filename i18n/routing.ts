@@ -11,8 +11,8 @@ import { defineRouting } from "next-intl/routing";
 export const routing = defineRouting({
   locales: ["en"],
   defaultLocale: "en",
-  // Subpath strategy: /en/..., /fr/... — see REQ-L-02.
-  localePrefix: "always",
+  // Default locale (en) served at root (no prefix). Other locales get /xx/...
+  localePrefix: "as-needed",
 });
 
 export type Locale = (typeof routing.locales)[number];

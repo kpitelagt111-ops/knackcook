@@ -11,18 +11,18 @@ mkdirSync(dirname(REPORT_PATH), { recursive: true });
  * but /admin/login is publicly reachable.
  */
 const PAGES = [
-  "/en",
-  "/en/blog",
-  "/en/blog/best-stand-mixers-2026",
-  "/en/products/artisancraft-compactpro-hand-mixer",
-  "/en/category/stand-mixers",
-  "/en/compare",
-  "/en/search",
-  "/en/wishlist",
-  "/en/affiliate-disclosure",
-  "/en/legal/privacy",
-  "/en/legal/cookies",
-  "/en/legal/notice",
+  "/",
+  "/blog",
+  "/blog/best-stand-mixers-2026",
+  "/products/artisancraft-compactpro-hand-mixer",
+  "/category/stand-mixers",
+  "/compare",
+  "/search",
+  "/wishlist",
+  "/affiliate-disclosure",
+  "/legal/privacy",
+  "/legal/cookies",
+  "/legal/notice",
   "/admin/login",
 ] as const;
 

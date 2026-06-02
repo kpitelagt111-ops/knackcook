@@ -34,7 +34,7 @@ export default function proxy(req: NextRequest) {
   }
 
   // Admin is NOT localized — it must never run through next-intl, otherwise
-  // localePrefix:"always" rewrites /admin/login to /en/admin/login (404).
+  // next-intl would rewrite /admin/login under locale negotiation (404).
   if (ADMIN_PATH.test(pathname)) {
     if (ADMIN_LOGIN_PATH.test(pathname)) {
       return NextResponse.next();

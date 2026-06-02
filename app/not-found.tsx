@@ -55,7 +55,7 @@ export default function GlobalNotFound() {
             is stale.
           </p>
           <a
-            href="/en"
+            href="/"
             style={{
               display: "inline-flex",
               alignItems: "center",

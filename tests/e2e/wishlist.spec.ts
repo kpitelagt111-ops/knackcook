@@ -11,7 +11,7 @@ import { expect, test } from "@playwright/test";
  */
 test.describe("wishlist", () => {
   test("empty wishlist shows the empty-state copy", async ({ page }) => {
-    await page.goto("/en/wishlist");
+    await page.goto("/wishlist");
     await expect(page.getByRole("heading", { level: 1, name: /wishlist/i })).toBeVisible();
     // The copy appears twice (kicker + empty-state card) — assert both render.
     await expect(page.getByText(/Your wishlist is empty/i).first()).toBeVisible();
@@ -32,7 +32,7 @@ test.describe("wishlist", () => {
       );
     });
 
-    await page.goto("/en/wishlist");
+    await page.goto("/wishlist");
 
     // Both slugs render as links to their product page.
     const linkA = page.locator('a[href$="/products/artisancraft-compactpro-hand-mixer"]');

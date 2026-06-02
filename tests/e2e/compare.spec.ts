@@ -7,7 +7,7 @@ import { expect, test } from "@playwright/test";
 test.describe("public compare", () => {
   test("compare renders a table with both product titles for 2 valid slugs", async ({ page }) => {
     const response = await page.goto(
-      "/en/compare?ids=artisancraft-compactpro-hand-mixer,vitawhirl-highspeed-countertop-blender",
+      "/compare?ids=artisancraft-compactpro-hand-mixer,vitawhirl-highspeed-countertop-blender",
     );
     expect(response?.status(), "compare page should return 2xx").toBeLessThan(400);
 
@@ -32,7 +32,7 @@ test.describe("public compare", () => {
   });
 
   test("compare with <2 slugs renders the hint instead of the table", async ({ page }) => {
-    const response = await page.goto("/en/compare?ids=artisancraft-compactpro-hand-mixer");
+    const response = await page.goto("/compare?ids=artisancraft-compactpro-hand-mixer");
     expect(response?.status()).toBeLessThan(400);
     await expect(page.getByText(/Select 2 to 4 products/i)).toBeVisible();
     // Table is intentionally absent.
