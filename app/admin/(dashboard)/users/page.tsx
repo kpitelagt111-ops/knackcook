@@ -1,7 +1,12 @@
 import { Badge, Button, Card, CardBody, CardHeader, cn, Input } from "@/components/ui";
 import { requireRole } from "@/lib/auth/guards";
 import { db } from "@/lib/db";
-import { changeAdminUserRole, createAdminUser, deleteAdminUser } from "./actions";
+import {
+  changeAdminUserPassword,
+  changeAdminUserRole,
+  createAdminUser,
+  deleteAdminUser,
+} from "./actions";
 
 export const dynamic = "force-dynamic";
 
@@ -140,6 +145,7 @@ export default async function UsersPage() {
                 <th className="px-5 py-3.5">Email</th>
                 <th className="px-5 py-3.5">Name</th>
                 <th className="px-5 py-3.5">Role</th>
+                <th className="px-5 py-3.5">Password</th>
                 <th className="px-5 py-3.5">Created</th>
                 <th className="px-5 py-3.5 text-right">Actions</th>
               </tr>
@@ -183,6 +189,27 @@ export default async function UsersPage() {
                           disabled={isLastSuperAdmin}
                         >
                           Update
+                        </Button>
+                      </form>
+                    </td>
+                    <td className="px-5 py-3.5">
+                      <form
+                        action={changeAdminUserPassword}
+                        className="flex items-center gap-2"
+                      >
+                        <input type="hidden" name="id" value={u.id} />
+                        <input
+                          type="password"
+                          name="password"
+                          minLength={8}
+                          required
+                          autoComplete="new-password"
+                          placeholder="New password"
+                          aria-label={`New password for ${u.email}`}
+                          className={cn(INPUT_CLASS, "h-9 max-w-[10rem] px-3 text-xs")}
+                        />
+                        <Button type="submit" variant="outline" size="sm">
+                          Set
                         </Button>
                       </form>
                     </td>

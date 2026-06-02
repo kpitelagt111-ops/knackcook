@@ -34,6 +34,11 @@ const changeRoleSchema = z.object({
   role: roleSchema,
 });
 
+const changePasswordSchema = z.object({
+  id: idSchema,
+  password: z.string().min(8).max(200),
+});
+
 const BCRYPT_ROUNDS = 12;
 
 async function countSuperAdmins(): Promise<number> {
@@ -121,6 +126,44 @@ export async function deleteAdminUser(formData: FormData): Promise<void> {
     entity: "User",
     entityId: id,
     meta: { email: target.email, role: target.role },
+  });
+
+  revalidatePath("/admin/users");
+}
+
+export async function changeAdminUserPassword(formData: FormData): Promise<void> {
+  const actor = await requireRole("SUPER_ADMIN");
+
+  const parsed = changePasswordSchema.safeParse({
+    id: formData.get("id"),
+    password: formData.get("password"),
+  });
+  if (!parsed.success) {
+    console.error("[users] password change rejected:", parsed.error.issues);
+    return;
+  }
+
+  const target = await db.user.findUnique({
+    where: { id: parsed.data.id },
+    select: { id: true, email: true },
+  });
+  if (!target) {
+    console.error(`[users] password change rejected: user ${parsed.data.id} not found`);
+    return;
+  }
+
+  const password = await hash(parsed.data.password, BCRYPT_ROUNDS);
+  await db.user.update({
+    where: { id: parsed.data.id },
+    data: { password },
+  });
+
+  await logAudit({
+    userId: actor.id,
+    action: "user.changePassword",
+    entity: "User",
+    entityId: parsed.data.id,
+    meta: { email: target.email },
   });
 
   revalidatePath("/admin/users");

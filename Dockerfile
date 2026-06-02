@@ -29,6 +29,14 @@ RUN npm install -g prisma@6.16.0 --no-audit --no-fund
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=builder /app/prisma ./prisma
+COPY --from=builder --chown=nextjs:nodejs /app/scripts ./scripts
+
+RUN cd /tmp \
+  && npm pack bcryptjs@3.0.3 --silent \
+  && mkdir -p /app/node_modules/bcryptjs \
+  && tar -xzf bcryptjs-*.tgz -C /app/node_modules/bcryptjs --strip-components=1 \
+  && rm -rf /tmp/bcryptjs* \
+  && chown -R nextjs:nodejs /app/node_modules/bcryptjs
 
 USER nextjs
 EXPOSE 3000
