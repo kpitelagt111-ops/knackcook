@@ -7,9 +7,7 @@ import { expect, test } from "@playwright/test";
  * state copy renders without error.
  */
 test.describe("public search", () => {
-  test("/search?q=mixer returns either product results or empty-state copy", async ({
-    page,
-  }) => {
+  test("/search?q=mixer returns either product results or empty-state copy", async ({ page }) => {
     const response = await page.goto("/search?q=mixer");
     expect(response?.status(), "search page should return 2xx").toBeLessThan(400);
 
