@@ -15,6 +15,9 @@ export const routing = defineRouting({
   // when only one locale is defined. Switch to `"as-needed"` the day a second locale
   // is added — at that point the loop bug no longer applies.
   localePrefix: "never",
+  // Rely only on URL for locale resolution. Avoid Accept-Language / cookie based
+  // redirects that can produce 307 loops behind certain proxies (e.g. CI standalone).
+  localeDetection: false,
 });
 
 export type Locale = (typeof routing.locales)[number];
