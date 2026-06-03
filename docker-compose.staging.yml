@@ -18,8 +18,8 @@ services:
       dockerfile: Dockerfile
     restart: unless-stopped
     env_file: .env
+    # DATABASE_URL comes from .env (env_file) — not overridden here (see Bug #8).
     environment:
-      DATABASE_URL: postgresql://knackcook:${POSTGRES_PASSWORD:-knackcook}@postgres:5432/knackcook?schema=public
       REDIS_URL: redis://redis:6379
       MEILISEARCH_HOST: http://meilisearch:7700
     depends_on:
