@@ -1,4 +1,4 @@
-import { Button, Card, CardBody, CardHeader, cn, Input } from "@/components/ui";
+import { Button, Card, CardBody, CardHeader, ConfirmButton, cn, Input } from "@/components/ui";
 import { requireRole } from "@/lib/auth/guards";
 import { db } from "@/lib/db";
 import { createCategory, deleteCategory, renameCategory, reorderCategory } from "./actions";
@@ -178,8 +178,7 @@ export default async function AdminCategoriesPage() {
                     <td className="px-5 py-4 text-right">
                       <form action={deleteCategory}>
                         <input type="hidden" name="id" value={c.id} />
-                        <Button
-                          type="submit"
+                        <ConfirmButton
                           variant="ghost"
                           size="sm"
                           disabled={c._count.products > 0}
@@ -189,9 +188,12 @@ export default async function AdminCategoriesPage() {
                               : "Delete this category"
                           }
                           className="text-danger-600 hover:bg-danger-50 dark:text-danger-50 dark:hover:bg-danger-600/20 disabled:text-muted"
+                          confirmTitle="Delete this category?"
+                          confirmMessage={`"${c.translations[0]?.name ?? c.slug}" will be permanently removed along with its translations. This cannot be undone.`}
+                          confirmLabel="Delete"
                         >
                           Delete
-                        </Button>
+                        </ConfirmButton>
                       </form>
                     </td>
                   </tr>

@@ -8,12 +8,19 @@ import {
   Card,
   CardBody,
   CardHeader,
+  ConfirmButton,
   cn,
   Input,
 } from "@/components/ui";
 import { requireRole } from "@/lib/auth/guards";
 import { db } from "@/lib/db";
-import { linkProduct, setArticleStatus, unlinkProduct, updateArticle } from "../actions";
+import {
+  deleteArticle,
+  linkProduct,
+  setArticleStatus,
+  unlinkProduct,
+  updateArticle,
+} from "../actions";
 
 const ARTICLE_TYPES = ["GUIDE", "COMPARISON", "LISTICLE", "HOWTO", "NEWS"] as const;
 
@@ -106,29 +113,62 @@ export default async function AdminArticleEditPage({
               <form action={setArticleStatus}>
                 <input type="hidden" name="id" value={article.id} />
                 <input type="hidden" name="status" value="IN_REVIEW" />
-                <Button type="submit" variant="outline" size="sm">
+                <ConfirmButton
+                  variant="outline"
+                  size="sm"
+                  confirmTitle="Send to review?"
+                  confirmMessage={`"${translation?.title ?? article.slug}" will move to IN_REVIEW and wait for editorial sign-off.`}
+                  confirmTone="primary"
+                  confirmLabel="Send"
+                >
                   Send to review
-                </Button>
+                </ConfirmButton>
               </form>
             )}
             {article.status !== "PUBLISHED" && (
               <form action={setArticleStatus}>
                 <input type="hidden" name="id" value={article.id} />
                 <input type="hidden" name="status" value="PUBLISHED" />
-                <Button type="submit" variant="primary" size="sm">
+                <ConfirmButton
+                  variant="primary"
+                  size="sm"
+                  confirmTitle="Publish this article?"
+                  confirmMessage={`"${translation?.title ?? article.slug}" will become public on knackcook.com and trigger an ISR rebuild.`}
+                  confirmTone="primary"
+                  confirmLabel="Publish"
+                >
                   Publish
-                </Button>
+                </ConfirmButton>
               </form>
             )}
             {article.status === "PUBLISHED" && (
               <form action={setArticleStatus}>
                 <input type="hidden" name="id" value={article.id} />
                 <input type="hidden" name="status" value="DRAFT" />
-                <Button type="submit" variant="outline" size="sm">
+                <ConfirmButton
+                  variant="outline"
+                  size="sm"
+                  confirmTitle="Unpublish this article?"
+                  confirmMessage={`"${translation?.title ?? article.slug}" will be removed from the public site immediately.`}
+                  confirmLabel="Unpublish"
+                >
                   Unpublish
-                </Button>
+                </ConfirmButton>
               </form>
             )}
+            <form action={deleteArticle}>
+              <input type="hidden" name="id" value={article.id} />
+              <ConfirmButton
+                variant="ghost"
+                size="sm"
+                className="text-danger-600 hover:bg-danger-50 dark:text-danger-50 dark:hover:bg-danger-600/20"
+                confirmTitle="Delete this article?"
+                confirmMessage={`"${translation?.title ?? article.slug}" and all its translations and product links will be permanently removed. This cannot be undone.`}
+                confirmLabel="Delete"
+              >
+                Delete
+              </ConfirmButton>
+            </form>
           </div>
         </div>
       </header>
@@ -331,14 +371,16 @@ export default async function AdminArticleEditPage({
                     <form action={unlinkProduct}>
                       <input type="hidden" name="id" value={article.id} />
                       <input type="hidden" name="productId" value={ap.product.id} />
-                      <Button
-                        type="submit"
+                      <ConfirmButton
                         variant="ghost"
                         size="sm"
                         className="text-danger-600 hover:bg-danger-50 dark:text-danger-50 dark:hover:bg-danger-600/20"
+                        confirmTitle="Unlink this product?"
+                        confirmMessage={`"${title}" will no longer appear in this article. The product itself stays in the catalog.`}
+                        confirmLabel="Unlink"
                       >
                         Unlink
-                      </Button>
+                      </ConfirmButton>
                     </form>
                   </li>
                 );

@@ -8,6 +8,7 @@ import {
   Card,
   CardBody,
   CardHeader,
+  ConfirmButton,
   cn,
   Input,
 } from "@/components/ui";
@@ -109,46 +110,79 @@ export default async function AdminProductEditPage({
               <form action={setProductStatus}>
                 <input type="hidden" name="id" value={product.id} />
                 <input type="hidden" name="status" value="IN_REVIEW" />
-                <Button type="submit" variant="outline" size="sm">
+                <ConfirmButton
+                  variant="outline"
+                  size="sm"
+                  confirmTitle="Send to review?"
+                  confirmMessage={`"${translation?.title ?? product.slug}" will move to IN_REVIEW for editorial sign-off.`}
+                  confirmTone="primary"
+                  confirmLabel="Send"
+                >
                   Send to review
-                </Button>
+                </ConfirmButton>
               </form>
             )}
             {product.status !== "PUBLISHED" && (
               <form action={setProductStatus}>
                 <input type="hidden" name="id" value={product.id} />
                 <input type="hidden" name="status" value="PUBLISHED" />
-                <Button type="submit" variant="primary" size="sm">
+                <ConfirmButton
+                  variant="primary"
+                  size="sm"
+                  confirmTitle="Publish this product?"
+                  confirmMessage={`"${translation?.title ?? product.slug}" (${product.asin}) will become eligible to appear publicly. It also needs to be Active to show on the site.`}
+                  confirmTone="primary"
+                  confirmLabel="Publish"
+                >
                   Publish
-                </Button>
+                </ConfirmButton>
               </form>
             )}
             {product.status === "PUBLISHED" && (
               <form action={setProductStatus}>
                 <input type="hidden" name="id" value={product.id} />
                 <input type="hidden" name="status" value="DRAFT" />
-                <Button type="submit" variant="outline" size="sm">
+                <ConfirmButton
+                  variant="outline"
+                  size="sm"
+                  confirmTitle="Unpublish this product?"
+                  confirmMessage={`"${translation?.title ?? product.slug}" will revert to DRAFT and disappear from the public site.`}
+                  confirmLabel="Unpublish"
+                >
                   Unpublish
-                </Button>
+                </ConfirmButton>
               </form>
             )}
             <form action={toggleProductActive}>
               <input type="hidden" name="id" value={product.id} />
               <input type="hidden" name="isActive" value={(!product.isActive).toString()} />
-              <Button type="submit" variant="secondary" size="sm">
+              <ConfirmButton
+                variant="secondary"
+                size="sm"
+                confirmTitle={product.isActive ? "Set inactive?" : "Set active?"}
+                confirmMessage={
+                  product.isActive
+                    ? `"${translation?.title ?? product.slug}" will be hidden from the public site (status stays unchanged).`
+                    : `"${translation?.title ?? product.slug}" will become visible on the public site if it is also PUBLISHED.`
+                }
+                confirmTone="primary"
+                confirmLabel={product.isActive ? "Set inactive" : "Set active"}
+              >
                 {product.isActive ? "Set inactive" : "Set active"}
-              </Button>
+              </ConfirmButton>
             </form>
             <form action={deleteProduct}>
               <input type="hidden" name="id" value={product.id} />
-              <Button
-                type="submit"
+              <ConfirmButton
                 variant="ghost"
                 size="sm"
                 className="text-danger-600 hover:bg-danger-50 dark:text-danger-50 dark:hover:bg-danger-600/20"
+                confirmTitle="Delete this product?"
+                confirmMessage={`"${translation?.title ?? product.slug}" (${product.asin}) and all its translations, images and click events will be permanently removed. This cannot be undone.`}
+                confirmLabel="Delete"
               >
                 Delete
-              </Button>
+              </ConfirmButton>
             </form>
           </div>
         </div>

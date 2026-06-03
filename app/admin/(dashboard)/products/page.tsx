@@ -7,6 +7,7 @@ import {
   buttonStyles,
   Card,
   CardBody,
+  ConfirmButton,
   cn,
   Input,
 } from "@/components/ui";
@@ -253,39 +254,61 @@ export default async function AdminProductsPage({
                             <form action={setProductStatus}>
                               <input type="hidden" name="id" value={p.id} />
                               <input type="hidden" name="status" value="PUBLISHED" />
-                              <Button type="submit" variant="primary" size="sm">
+                              <ConfirmButton
+                                variant="primary"
+                                size="sm"
+                                confirmTitle="Publish this product?"
+                                confirmMessage={`"${title}" (${p.asin}) will become eligible to appear publicly. It also needs to be Active to show on the site.`}
+                                confirmTone="primary"
+                                confirmLabel="Publish"
+                              >
                                 Publish
-                              </Button>
+                              </ConfirmButton>
                             </form>
                           )}
                           {p.status === "DRAFT" && (
                             <form action={setProductStatus}>
                               <input type="hidden" name="id" value={p.id} />
                               <input type="hidden" name="status" value="IN_REVIEW" />
-                              <Button type="submit" variant="outline" size="sm">
+                              <ConfirmButton
+                                variant="outline"
+                                size="sm"
+                                confirmTitle="Send to review?"
+                                confirmMessage={`"${title}" will move to IN_REVIEW for editorial sign-off.`}
+                                confirmTone="primary"
+                                confirmLabel="Send"
+                              >
                                 Review
-                              </Button>
+                              </ConfirmButton>
                             </form>
                           )}
                           {p.status === "PUBLISHED" && (
                             <form action={setProductStatus}>
                               <input type="hidden" name="id" value={p.id} />
                               <input type="hidden" name="status" value="DRAFT" />
-                              <Button type="submit" variant="outline" size="sm">
+                              <ConfirmButton
+                                variant="outline"
+                                size="sm"
+                                confirmTitle="Unpublish this product?"
+                                confirmMessage={`"${title}" will revert to DRAFT and disappear from the public site.`}
+                                confirmLabel="Unpublish"
+                              >
                                 Unpublish
-                              </Button>
+                              </ConfirmButton>
                             </form>
                           )}
                           <form action={deleteProduct}>
                             <input type="hidden" name="id" value={p.id} />
-                            <Button
-                              type="submit"
+                            <ConfirmButton
                               variant="ghost"
                               size="sm"
                               className="text-danger-600 hover:bg-danger-50 dark:text-danger-50 dark:hover:bg-danger-600/20"
+                              confirmTitle="Delete this product?"
+                              confirmMessage={`"${title}" (${p.asin}) and all its translations, images and click events will be permanently removed. This cannot be undone.`}
+                              confirmLabel="Delete"
                             >
                               Delete
-                            </Button>
+                            </ConfirmButton>
                           </form>
                         </div>
                       </td>
