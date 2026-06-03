@@ -186,6 +186,8 @@ jobs:
             -e MEILISEARCH_HOST \
             -e MEILISEARCH_MASTER_KEY \
             -e AUTH_SECRET \
+            -e AUTH_URL=http://localhost:3000 \
+            -e AUTH_TRUST_HOST=true \
             -e INGEST_API_KEY \
             -e AMAZON_TAG_US \
             -e NEXT_PUBLIC_SITE_URL \
