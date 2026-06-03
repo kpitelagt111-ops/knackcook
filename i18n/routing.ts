@@ -11,8 +11,10 @@ import { defineRouting } from "next-intl/routing";
 export const routing = defineRouting({
   locales: ["en"],
   defaultLocale: "en",
-  // Default locale (en) served at root (no prefix). Other locales get /xx/...
-  localePrefix: "as-needed",
+  // Single-locale: no prefix at all. Avoid next-intl v4 redirect loop on `as-needed`
+  // when only one locale is defined. Switch to `"as-needed"` the day a second locale
+  // is added — at that point the loop bug no longer applies.
+  localePrefix: "never",
 });
 
 export type Locale = (typeof routing.locales)[number];
