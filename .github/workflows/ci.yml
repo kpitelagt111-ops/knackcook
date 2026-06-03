@@ -160,43 +160,53 @@ jobs:
           EDITOR_NAME: CI Editor
         run: node scripts/seed-editor.mjs
 
-      - name: Build (production)
-        timeout-minutes: 5
-        run: pnpm build
+      # E2E tests the REAL shipping artifact: the Docker image (same as
+      # prod/staging). A bare `next build` + standalone server on the Ubuntu
+      # runner emits an absolute middleware-rewrite that triggers an infinite
+      # 307 redirect loop (ERR_TOO_MANY_REDIRECTS) — NOT reproducible in the
+      # Alpine Docker image that actually ships. So we build & run the image.
+      - name: Build app Docker image (the shipping artifact)
+        timeout-minutes: 10
+        run: docker build -t knackcook-app:ci .
 
-      - name: Prepare standalone runtime
-        timeout-minutes: 1
+      - name: Run app container (prod-identical runtime)
+        timeout-minutes: 3
         run: |
-          cp -r .next/static .next/standalone/.next/static
-          if [ -d public ]; then cp -r public .next/standalone/public; fi
-
-      - name: Start server in background
-        timeout-minutes: 2
-        run: |
-          PORT=3000 HOSTNAME=0.0.0.0 node .next/standalone/server.js > server.log 2>&1 &
-          echo $! > server.pid
+          # --network host: the container reaches the GitHub service containers
+          # (postgres/redis/meilisearch) on localhost, exactly like the host
+          # steps that ran migrations + seeding. It also exposes :3000 on the
+          # runner host for Playwright + the seeding scripts.
+          docker run -d --name knackcook-app --network host \
+            -e PORT=3000 \
+            -e HOSTNAME=0.0.0.0 \
+            -e NODE_ENV=production \
+            -e NEXT_TELEMETRY_DISABLED=1 \
+            -e DATABASE_URL \
+            -e REDIS_URL \
+            -e MEILISEARCH_HOST \
+            -e MEILISEARCH_MASTER_KEY \
+            -e AUTH_SECRET \
+            -e INGEST_API_KEY \
+            -e AMAZON_TAG_US \
+            -e NEXT_PUBLIC_SITE_URL \
+            knackcook-app:ci
           ready=0
-          for i in {1..30}; do
+          for i in {1..40}; do
             if curl -s --max-time 2 -o /dev/null http://127.0.0.1:3000/ 2>/dev/null; then
-              echo "Server responds after ${i}s"
+              echo "App responds after ${i}s"
               ready=1
               break
             fi
             sleep 1
           done
           if [ "$ready" != "1" ]; then
-            echo "Server did not respond within 30s. Server log:"
-            cat server.log
+            echo "App did not respond within 40s. Container logs:"
+            docker logs knackcook-app
             exit 1
           fi
-          echo "--- DEBUG: response headers to / ---"
-          curl -sI --max-time 5 http://127.0.0.1:3000/ || true
-          echo "--- DEBUG: response headers to /blog ---"
-          curl -sI --max-time 5 http://127.0.0.1:3000/blog || true
-          echo "--- DEBUG: GET / following 3 redirects ---"
-          curl -s -o /dev/null -w "HTTP %{http_code}, redirects=%{num_redirects}, url=%{url_effective}\n" -L --max-redirs 3 http://127.0.0.1:3000/ || true
-          echo "--- DEBUG: GET /api/track/MOCK001 (no redirect) ---"
-          curl -sI --max-time 5 http://127.0.0.1:3000/api/track/MOCK001 || true
+          echo "--- sanity: / should be 200 (no redirect loop) ---"
+          curl -sI --max-time 5 http://127.0.0.1:3000/ | head -3
+          curl -sI --max-time 5 http://127.0.0.1:3000/blog | head -3
 
       - name: Seed sample products + articles via ingestion API
         timeout-minutes: 3
@@ -215,20 +225,13 @@ jobs:
         timeout-minutes: 8
         run: pnpm test:e2e
 
-      - name: Dump server log (always, for debugging)
+      - name: Dump container logs (always, for debugging)
         if: always()
-        run: |
-          if [ -f server.log ]; then
-            echo "=== Last 200 lines of server.log ==="
-            tail -200 server.log
-          fi
+        run: docker logs knackcook-app 2>&1 | tail -200 || true
 
-      - name: Stop server
+      - name: Stop app container
         if: always()
-        run: |
-          if [ -f server.pid ]; then
-            kill $(cat server.pid) 2>/dev/null || true
-          fi
+        run: docker rm -f knackcook-app 2>/dev/null || true
 
       - name: Upload Playwright report on failure
         if: failure()
@@ -238,5 +241,4 @@ jobs:
           path: |
             playwright-report/
             test-results/
-            server.log
           retention-days: 7
