@@ -1,0 +1,102 @@
+{
+  "id": "ysGRE6iDhAqzo6PZ",
+  "name": "KK · MCP Tool · save_article",
+  "active": true,
+  "versionId": "e6d9e2ac-426e-4efe-a1f3-faad122465d8",
+  "versionCounter": 4,
+  "nodes": [
+    {
+      "id": "c0001-0000-4000-a000-000000000001",
+      "name": "Save Trigger",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [240, 320],
+      "parameters": {
+        "inputSource": "jsonExample",
+        "jsonExample": "{\n  \"asin\": \"B000000000\",\n  \"product_name\": \"Example Product Name\",\n  \"title\": \"Example Review Title\",\n  \"slug\": \"example-review-title\",\n  \"meta\": \"Short SEO meta description under 155 characters.\",\n  \"body\": \"<p>As an Amazon Associate, we earn from qualifying purchases.</p><p>Article body HTML...</p>\"\n}"
+      }
+    },
+    {
+      "id": "c0002-0000-4000-a000-000000000002",
+      "name": "Append to Drafts",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [460, 320],
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1_zgsKOUgY4KZTz6WUxEcUm0xFEzJS7JqR03Sj5x1ck8",
+          "mode": "id"
+        },
+        "sheetName": { "__rl": true, "value": "drafts", "mode": "name" },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "ASIN": "={{ $('Save Trigger').first().json.asin }}",
+            "Product Name": "={{ $('Save Trigger').first().json.product_name }}",
+            "Title": "={{ $('Save Trigger').first().json.title }}",
+            "Slug": "={{ $('Save Trigger').first().json.slug }}",
+            "Meta Description": "={{ $('Save Trigger').first().json.meta }}",
+            "Body": "={{ $('Save Trigger').first().json.body }}",
+            "Drafted Date": "={{ new Date().toISOString().slice(0,10) }}"
+          }
+        }
+      },
+      "credentials": {
+        "googleSheetsOAuth2Api": { "id": "nVpXrUCHT3NNmgQ0", "name": "Google Sheets account" }
+      }
+    },
+    {
+      "id": "c0003-0000-4000-a000-000000000003",
+      "name": "Create WP Draft",
+      "type": "n8n-nodes-base.wordpress",
+      "typeVersion": 1,
+      "position": [680, 320],
+      "parameters": {
+        "title": "={{ $('Save Trigger').first().json.title }}",
+        "additionalFields": {
+          "content": "={{ $('Save Trigger').first().json.body }}",
+          "slug": "={{ $('Save Trigger').first().json.slug }}",
+          "status": "draft"
+        }
+      },
+      "credentials": { "wordpressApi": { "id": "at9O330vCKfvvAVz", "name": "Wordpress account" } }
+    },
+    {
+      "id": "c0004-0000-4000-a000-000000000004",
+      "name": "Write Back",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [900, 320],
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1_zgsKOUgY4KZTz6WUxEcUm0xFEzJS7JqR03Sj5x1ck8",
+          "mode": "id"
+        },
+        "sheetName": { "__rl": true, "value": "winning_products", "mode": "name" },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "matchingColumns": ["ASIN"],
+          "value": {
+            "ASIN": "={{ $('Save Trigger').first().json.asin }}",
+            "Wordpress URL": "={{ $json.link }}",
+            "WP Status": "Draft",
+            "Content Status": "Drafted"
+          }
+        }
+      },
+      "credentials": {
+        "googleSheetsOAuth2Api": { "id": "nVpXrUCHT3NNmgQ0", "name": "Google Sheets account" }
+      }
+    }
+  ],
+  "connections": {
+    "Save Trigger": { "main": [[{ "node": "Append to Drafts", "type": "main", "index": 0 }]] },
+    "Append to Drafts": { "main": [[{ "node": "Create WP Draft", "type": "main", "index": 0 }]] },
+    "Create WP Draft": { "main": [[{ "node": "Write Back", "type": "main", "index": 0 }]] }
+  },
+  "settings": { "executionOrder": "v1", "timezone": "Europe/Paris", "saveManualExecutions": true }
+}

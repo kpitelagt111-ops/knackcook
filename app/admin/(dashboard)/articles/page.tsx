@@ -7,11 +7,12 @@ import {
   buttonStyles,
   Card,
   CardBody,
+  ConfirmButton,
   Input,
 } from "@/components/ui";
 import { requireRole } from "@/lib/auth/guards";
 import { db } from "@/lib/db";
-import { setArticleStatus } from "./actions";
+import { deleteArticle, setArticleStatus } from "./actions";
 
 const PAGE_SIZE = 25;
 const STATUS_FILTERS = ["ALL", "DRAFT", "IN_REVIEW", "PUBLISHED"] as const;
@@ -228,29 +229,62 @@ export default async function AdminArticlesPage({
                             <form action={setArticleStatus}>
                               <input type="hidden" name="id" value={a.id} />
                               <input type="hidden" name="status" value="PUBLISHED" />
-                              <Button type="submit" variant="primary" size="sm">
+                              <ConfirmButton
+                                variant="primary"
+                                size="sm"
+                                confirmTitle="Publish this article?"
+                                confirmMessage={`"${title}" will become public on knackcook.com and trigger an ISR rebuild.`}
+                                confirmTone="primary"
+                                confirmLabel="Publish"
+                              >
                                 Publish
-                              </Button>
+                              </ConfirmButton>
                             </form>
                           )}
                           {a.status === "DRAFT" && (
                             <form action={setArticleStatus}>
                               <input type="hidden" name="id" value={a.id} />
                               <input type="hidden" name="status" value="IN_REVIEW" />
-                              <Button type="submit" variant="outline" size="sm">
+                              <ConfirmButton
+                                variant="outline"
+                                size="sm"
+                                confirmTitle="Send to review?"
+                                confirmMessage={`"${title}" will move to IN_REVIEW and wait for editorial sign-off.`}
+                                confirmTone="primary"
+                                confirmLabel="Send"
+                              >
                                 Review
-                              </Button>
+                              </ConfirmButton>
                             </form>
                           )}
                           {a.status === "PUBLISHED" && (
                             <form action={setArticleStatus}>
                               <input type="hidden" name="id" value={a.id} />
                               <input type="hidden" name="status" value="DRAFT" />
-                              <Button type="submit" variant="outline" size="sm">
+                              <ConfirmButton
+                                variant="outline"
+                                size="sm"
+                                confirmTitle="Unpublish this article?"
+                                confirmMessage={`"${title}" will be removed from the public site immediately.`}
+                                confirmLabel="Unpublish"
+                              >
                                 Unpublish
-                              </Button>
+                              </ConfirmButton>
                             </form>
                           )}
+                          <form action={deleteArticle}>
+                            <input type="hidden" name="id" value={a.id} />
+                            <ConfirmButton
+                              variant="ghost"
+                              size="sm"
+                              className="text-danger-600 hover:bg-danger-50 dark:text-danger-50 dark:hover:bg-danger-600/20"
+                              confirmTitle="Delete this article?"
+                              confirmMessage={`"${title}" and all its translations and product links will be permanently removed. This cannot be undone.`}
+                              confirmLabel="Delete"
+                            >
+                              Delete
+                            </ConfirmButton>
+                          </form>
                         </div>
                       </td>
                     </tr>

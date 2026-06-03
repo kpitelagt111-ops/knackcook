@@ -17,6 +17,7 @@ export {
   type CardVariant,
 } from "./card";
 export { type ClassValue, cn } from "./cn";
+export { ConfirmButton, type ConfirmButtonProps } from "./confirm-button";
 export { Container, type ContainerProps, type ContainerSize } from "./container";
 export { Input, type InputProps, type InputSize } from "./input";
 export { Rating, type RatingProps, type RatingSize } from "./rating";

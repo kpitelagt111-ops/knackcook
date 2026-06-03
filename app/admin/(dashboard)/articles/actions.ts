@@ -57,6 +57,8 @@ const unlinkSchema = z.object({
   productId: z.string().min(1),
 });
 
+const deleteSchema = z.object({ id: z.string().min(1) });
+
 function fieldString(form: FormData, name: string): string | undefined {
   const value = form.get(name);
   return typeof value === "string" ? value : undefined;
@@ -199,6 +201,25 @@ export async function linkProduct(formData: FormData): Promise<void> {
   });
 
   revalidatePath(`/admin/articles/${parsed.data.id}`);
+}
+
+export async function deleteArticle(formData: FormData): Promise<void> {
+  const user = await requireRole("EDITOR");
+  const parsed = deleteSchema.safeParse({ id: fieldString(formData, "id") });
+  if (!parsed.success) fail(parsed.error.issues[0]?.message);
+
+  // Cascade in schema removes ArticleTranslation / ArticleProduct / ArticleTag.
+  await db.article.delete({ where: { id: parsed.data.id } });
+
+  await logAudit({
+    userId: user.id,
+    action: "article.delete",
+    entity: "Article",
+    entityId: parsed.data.id,
+  });
+
+  revalidateArticles();
+  revalidatePath("/admin/articles");
 }
 
 export async function unlinkProduct(formData: FormData): Promise<void> {
