@@ -193,10 +193,7 @@ export default async function UsersPage() {
                       </form>
                     </td>
                     <td className="px-5 py-3.5">
-                      <form
-                        action={changeAdminUserPassword}
-                        className="flex items-center gap-2"
-                      >
+                      <form action={changeAdminUserPassword} className="flex items-center gap-2">
                         <input type="hidden" name="id" value={u.id} />
                         <input
                           type="password"
