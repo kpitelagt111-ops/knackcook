@@ -1,0 +1,51 @@
+{
+  "id": "kRW22IUlNY6KrKyc",
+  "name": "KK · MCP Tool · save_roundup",
+  "active": true,
+  "versionId": "069469b0-dd4a-4bb3-9a6c-3d579d058f00",
+  "versionCounter": 4,
+  "nodes": [
+    {
+      "id": "e0001-0000-4000-a000-000000000001",
+      "name": "Roundup Trigger",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [240, 320],
+      "parameters": {
+        "inputSource": "jsonExample",
+        "jsonExample": "{\n  \"title\": \"Best Cast Iron Skillets of 2026\",\n  \"slug\": \"best-cast-iron-skillets\",\n  \"meta\": \"Our picks for the best cast iron skillets, ranked by real ratings and review counts.\",\n  \"body\": \"<p>As an Amazon Associate, we earn from qualifying purchases.</p>\"\n}"
+      }
+    },
+    {
+      "id": "e0002-0000-4000-a000-000000000002",
+      "name": "Create WP Draft",
+      "type": "n8n-nodes-base.wordpress",
+      "typeVersion": 1,
+      "position": [460, 320],
+      "parameters": {
+        "title": "={{ $('Roundup Trigger').first().json.title }}",
+        "additionalFields": {
+          "content": "={{ $('Roundup Trigger').first().json.body }}",
+          "slug": "={{ $('Roundup Trigger').first().json.slug }}",
+          "status": "draft"
+        }
+      },
+      "credentials": { "wordpressApi": { "id": "at9O330vCKfvvAVz", "name": "Wordpress account" } }
+    },
+    {
+      "id": "e0003-0000-4000-a000-000000000003",
+      "name": "Format Result",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [680, 320],
+      "parameters": {
+        "jsCode": "const t = $('Roundup Trigger').first().json;\nreturn [{ json: {\n  status: 'WordPress draft created',\n  title:  t.title,\n  wp_url: $json.link || ''\n}}];\n"
+      }
+    }
+  ],
+  "connections": {
+    "Roundup Trigger": { "main": [[{ "node": "Create WP Draft", "type": "main", "index": 0 }]] },
+    "Create WP Draft": { "main": [[{ "node": "Format Result", "type": "main", "index": 0 }]] }
+  },
+  "settings": { "executionOrder": "v1", "timezone": "Europe/Paris", "saveManualExecutions": true }
+}

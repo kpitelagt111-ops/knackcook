@@ -1,0 +1,47 @@
+{
+  "id": "jBmw83mjGYjWkLx2",
+  "name": "KK · MCP Tool · get_recent_posts",
+  "active": true,
+  "versionId": "bdf92717-36b5-414c-925b-b45ed36d3812",
+  "versionCounter": 4,
+  "nodes": [
+    {
+      "id": "g0001-0000-4000-a000-000000000001",
+      "name": "Posts Trigger",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [240, 320],
+      "parameters": { "inputSource": "passthrough" }
+    },
+    {
+      "id": "g0002-0000-4000-a000-000000000002",
+      "name": "Get Published Posts",
+      "type": "n8n-nodes-base.wordpress",
+      "typeVersion": 1,
+      "position": [460, 320],
+      "parameters": {
+        "resource": "post",
+        "operation": "getAll",
+        "returnAll": false,
+        "limit": 50,
+        "filters": { "status": "publish" }
+      },
+      "credentials": { "wordpressApi": { "id": "at9O330vCKfvvAVz", "name": "Wordpress account" } }
+    },
+    {
+      "id": "g0003-0000-4000-a000-000000000003",
+      "name": "Clean Posts",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [680, 320],
+      "parameters": {
+        "jsCode": "const out = $input.all().map(i => {\n  const p = i.json || {};\n  const title = (p.title && p.title.rendered) ? p.title.rendered : (p.title || '');\n  return { json: { id: p.id, title, link: p.link, slug: p.slug } };\n}).filter(x => x.json.id);\nreturn out.length ? out : [{ json: { message: 'No published posts yet — internal links will populate as you publish.' } }];\n"
+      }
+    }
+  ],
+  "connections": {
+    "Posts Trigger": { "main": [[{ "node": "Get Published Posts", "type": "main", "index": 0 }]] },
+    "Get Published Posts": { "main": [[{ "node": "Clean Posts", "type": "main", "index": 0 }]] }
+  },
+  "settings": { "executionOrder": "v1", "timezone": "Europe/Paris", "saveManualExecutions": true }
+}

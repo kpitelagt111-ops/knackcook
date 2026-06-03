@@ -1,4 +1,13 @@
-import { Badge, Button, Card, CardBody, CardHeader, cn, Input } from "@/components/ui";
+import {
+  Badge,
+  Button,
+  Card,
+  CardBody,
+  CardHeader,
+  ConfirmButton,
+  cn,
+  Input,
+} from "@/components/ui";
 import { requireRole } from "@/lib/auth/guards";
 import { db } from "@/lib/db";
 import {
@@ -182,14 +191,17 @@ export default async function UsersPage() {
                           <option value="EDITOR">EDITOR</option>
                           <option value="SUPER_ADMIN">SUPER_ADMIN</option>
                         </select>
-                        <Button
-                          type="submit"
+                        <ConfirmButton
                           variant="outline"
                           size="sm"
                           disabled={isLastSuperAdmin}
+                          confirmTitle="Change this user's role?"
+                          confirmMessage={`The role assigned to ${u.email} will be updated. The action is recorded in the audit log.`}
+                          confirmTone="primary"
+                          confirmLabel="Update role"
                         >
                           Update
-                        </Button>
+                        </ConfirmButton>
                       </form>
                     </td>
                     <td className="px-5 py-3.5">
@@ -205,9 +217,16 @@ export default async function UsersPage() {
                           aria-label={`New password for ${u.email}`}
                           className={cn(INPUT_CLASS, "h-9 max-w-[10rem] px-3 text-xs")}
                         />
-                        <Button type="submit" variant="outline" size="sm">
+                        <ConfirmButton
+                          variant="outline"
+                          size="sm"
+                          confirmTitle="Set a new password?"
+                          confirmMessage={`The password for ${u.email} will be replaced. Existing sessions stay active until they expire.`}
+                          confirmTone="primary"
+                          confirmLabel="Set password"
+                        >
                           Set
-                        </Button>
+                        </ConfirmButton>
                       </form>
                     </td>
                     <td className="px-5 py-3.5 font-mono text-xs text-muted">
@@ -216,8 +235,7 @@ export default async function UsersPage() {
                     <td className="px-5 py-3.5 text-right">
                       <form action={deleteAdminUser} className="inline">
                         <input type="hidden" name="id" value={u.id} />
-                        <Button
-                          type="submit"
+                        <ConfirmButton
                           variant="ghost"
                           size="sm"
                           disabled={isSelf || isLastSuperAdmin}
@@ -229,9 +247,12 @@ export default async function UsersPage() {
                                 : "Delete user"
                           }
                           className="text-danger-600 hover:bg-danger-50 dark:text-danger-50 dark:hover:bg-danger-600/20 disabled:text-muted"
+                          confirmTitle="Delete this admin user?"
+                          confirmMessage={`${u.email} will be removed from the back-office. Their sessions are invalidated. This cannot be undone.`}
+                          confirmLabel="Delete user"
                         >
                           Delete
-                        </Button>
+                        </ConfirmButton>
                       </form>
                     </td>
                   </tr>
