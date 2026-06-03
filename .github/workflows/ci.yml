@@ -173,7 +173,7 @@ jobs:
       - name: Start server in background
         timeout-minutes: 2
         run: |
-          PORT=3000 HOSTNAME=127.0.0.1 node .next/standalone/server.js > server.log 2>&1 &
+          PORT=3000 HOSTNAME=0.0.0.0 node .next/standalone/server.js > server.log 2>&1 &
           echo $! > server.pid
           ready=0
           for i in {1..30}; do
