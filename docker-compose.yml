@@ -9,8 +9,10 @@ services:
       dockerfile: Dockerfile
     restart: unless-stopped
     env_file: .env
+    # DATABASE_URL comes from .env (env_file). Do NOT override it here — an
+    # interpolated value would win over .env and silently ignore edits (Bug #8).
+    # REDIS/MEILI are static internal hostnames, safe to set here.
     environment:
-      DATABASE_URL: postgresql://knackcook:${POSTGRES_PASSWORD:-knackcook}@postgres:5432/knackcook?schema=public
       REDIS_URL: redis://redis:6379
       MEILISEARCH_HOST: http://meilisearch:7700
     depends_on:
