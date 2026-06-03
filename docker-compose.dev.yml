@@ -1,0 +1,21 @@
+# Local-dev only: publish service ports to the host so the Next.js app (run via
+# `pnpm dev` on the host) and Prisma migrations can reach them.
+#
+# This file is NOT auto-applied (Docker Compose only auto-loads
+# `docker-compose.override.yml`). To use it during local dev:
+#
+#   docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+#
+# Production / staging deploy commands do NOT include this file → DB/Redis/Meili
+# ports stay internal to the Docker network (security).
+
+services:
+  postgres:
+    ports:
+      - "5432:5432"
+  redis:
+    ports:
+      - "6379:6379"
+  meilisearch:
+    ports:
+      - "7700:7700"
