@@ -50,6 +50,10 @@ export async function ingestArticles(
             },
           },
         });
+        // Re-ingesting an article also (re)links its referenced products as
+        // cards, idempotently — so a roundup published before its products
+        // existed can attach them on a later run. Additive: never unlinks.
+        await linkProductsToArticle(db, existing.id, productLinks);
         result.updated += 1;
       } else {
         await db.article.create({
@@ -118,7 +122,30 @@ async function resolveProductLinks(db: PrismaClient, asins: string[]): Promise<s
   if (!asins.length) return [];
   const found = await db.product.findMany({
     where: { asin: { in: asins } },
-    select: { id: true },
+    select: { id: true, asin: true },
   });
-  return found.map((p) => p.id);
+  // Preserve the order the ASINs were sent in (best pick first), not DB order.
+  const idByAsin = new Map(found.map((p) => [p.asin, p.id]));
+  return asins.map((asin) => idByAsin.get(asin)).filter((id): id is string => Boolean(id));
+}
+
+/**
+ * Idempotently link products to an article as "card" entries, preserving the
+ * given order. Safe to call repeatedly: existing links keep their place and
+ * have their order refreshed; new links are appended. Never removes links.
+ */
+async function linkProductsToArticle(
+  db: PrismaClient,
+  articleId: string,
+  productIds: string[],
+): Promise<void> {
+  for (let i = 0; i < productIds.length; i += 1) {
+    const productId = productIds[i];
+    if (!productId) continue;
+    await db.articleProduct.upsert({
+      where: { articleId_productId: { articleId, productId } },
+      create: { articleId, productId, role: "card", order: i },
+      update: { order: i },
+    });
+  }
 }
