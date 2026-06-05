@@ -35,7 +35,7 @@ async function main() {
     process.exit(1);
   }
 
-  let updates = [];
+  const updates = [];
 
   if (author.name !== NAME) {
     await prisma.author.update({ where: { id: author.id }, data: { name: NAME } });

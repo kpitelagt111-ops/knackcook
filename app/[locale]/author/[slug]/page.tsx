@@ -62,7 +62,11 @@ export default async function AuthorPage({
     url: authorUrl,
     ...(author.bio ? { description: author.bio } : {}),
     ...(author.avatarPath
-      ? { image: author.avatarPath.startsWith("http") ? author.avatarPath : `${SITE_URL}${author.avatarPath}` }
+      ? {
+          image: author.avatarPath.startsWith("http")
+            ? author.avatarPath
+            : `${SITE_URL}${author.avatarPath}`,
+        }
       : {}),
     jobTitle: "Research Analyst",
     knowsAbout: [
