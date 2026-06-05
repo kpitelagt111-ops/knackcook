@@ -95,7 +95,7 @@ export default async function LocaleLayout({
             <div className="flex-1">{children}</div>
             <SiteFooter />
             <CookieConsent />
-            <GoogleAnalytics />
+            <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />
           </ThemeProvider>
         </NextIntlClientProvider>
       </body>
