@@ -27,7 +27,8 @@ export async function generateMetadata({
   return {
     title: a.metaTitle ?? a.title,
     description: a.metaDescription ?? a.excerpt ?? undefined,
-    alternates: { canonical: `/${locale}/blog/${a.slug}` },
+    // localePrefix: "never" — canonical must match the unprefixed URL Next.js serves.
+    alternates: { canonical: `/blog/${a.slug}` },
   };
 }
 

@@ -28,7 +28,8 @@ export async function generateMetadata({
     title: p.metaTitle ?? p.title,
     description: p.metaDescription ?? p.editorialReview?.slice(0, 160) ?? undefined,
     openGraph: { title: p.metaTitle ?? p.title, type: "website" },
-    alternates: { canonical: `/${locale}/products/${p.slug}` },
+    // localePrefix: "never" — canonical must match the unprefixed URL Next.js serves.
+    alternates: { canonical: `/products/${p.slug}` },
   };
 }
 

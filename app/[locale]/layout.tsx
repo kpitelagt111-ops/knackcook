@@ -47,10 +47,14 @@ export async function generateMetadata({
 }: {
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
-  const { locale } = await params;
+  await params;
+  // localePrefix: "never" — all URLs are unprefixed at runtime. Canonical and
+  // hreflang must match the actually-served URLs (else canonical points to a
+  // redirect and Google de-prioritises the page). Revisit if a 2nd locale is
+  // added and localePrefix flips to "as-needed".
   const languages: Record<string, string> = {};
   for (const l of routing.locales) {
-    languages[l] = `${SITE_URL}/${l}`;
+    languages[l] = SITE_URL;
   }
   return {
     metadataBase: new URL(SITE_URL),
@@ -60,7 +64,7 @@ export async function generateMetadata({
     },
     description: "Honest editorial reviews and buying guides for the best kitchen gear.",
     alternates: {
-      canonical: `${SITE_URL}/${locale}`,
+      canonical: SITE_URL,
       languages,
     },
   };
