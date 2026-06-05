@@ -27,6 +27,9 @@ export function CookieConsent() {
   function choose(value: "accepted" | "rejected") {
     localStorage.setItem(KEY, value);
     setDecided(true);
+    // Notify same-tab listeners (e.g. <GoogleAnalytics />) — the native
+    // "storage" event only fires across tabs, not within the same one.
+    window.dispatchEvent(new CustomEvent("kk:consent-change"));
   }
 
   if (decided) return null;

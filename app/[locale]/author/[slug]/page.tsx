@@ -1,4 +1,5 @@
-﻿import Image from "next/image";
+﻿import type { Metadata } from "next";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Container } from "@/components/ui/container";
@@ -7,6 +8,33 @@ import { Link } from "@/i18n/navigation";
 import { getAuthorBySlug } from "@/lib/blog/queries";
 
 export const revalidate = 21600; // ISR 6h
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://knackcook.com";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string; slug: string }>;
+}): Promise<Metadata> {
+  const { locale, slug } = await params;
+  const author = await getAuthorBySlug(slug, locale);
+  if (!author) return {};
+  const url = `${SITE_URL}/${locale}/author/${author.slug}`;
+  const description = author.bio
+    ? author.bio.slice(0, 160)
+    : `Articles and buying guides by ${author.name} at KnackCook.`;
+  return {
+    title: `${author.name} — Editor`,
+    description,
+    alternates: { canonical: url },
+    openGraph: {
+      type: "profile",
+      url,
+      title: `${author.name} — Editor at KnackCook`,
+      description,
+    },
+  };
+}
 
 const monthFormat = new Intl.DateTimeFormat("en", {
   month: "short",
@@ -26,10 +54,28 @@ export default async function AuthorPage({
 
   const t = await getTranslations("author");
 
+  const authorUrl = `${SITE_URL}/${locale}/author/${author.slug}`;
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Person",
     name: author.name,
+    url: authorUrl,
+    ...(author.bio ? { description: author.bio } : {}),
+    ...(author.avatarPath
+      ? { image: author.avatarPath.startsWith("http") ? author.avatarPath : `${SITE_URL}${author.avatarPath}` }
+      : {}),
+    jobTitle: "Research Analyst",
+    knowsAbout: [
+      "Cast iron cookware",
+      "Kitchenware reviews",
+      "Cookware buying guides",
+      "Glass-top and induction cooking",
+    ],
+    worksFor: {
+      "@type": "Organization",
+      name: "KnackCook",
+      url: SITE_URL,
+    },
   };
 
   return (

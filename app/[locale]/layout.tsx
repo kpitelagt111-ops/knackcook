@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
 import { CookieConsent } from "@/components/cookie-consent";
+import { GoogleAnalytics } from "@/components/google-analytics";
 import { ScrollReveal } from "@/components/scroll-reveal";
 import { SiteFooter, SiteHeader } from "@/components/site-chrome";
 import { ThemeProvider } from "@/components/theme/theme-provider";
@@ -94,6 +95,7 @@ export default async function LocaleLayout({
             <div className="flex-1">{children}</div>
             <SiteFooter />
             <CookieConsent />
+            <GoogleAnalytics />
           </ThemeProvider>
         </NextIntlClientProvider>
       </body>
