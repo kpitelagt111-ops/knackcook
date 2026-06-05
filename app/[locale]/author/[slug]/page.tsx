@@ -19,7 +19,8 @@ export async function generateMetadata({
   const { locale, slug } = await params;
   const author = await getAuthorBySlug(slug, locale);
   if (!author) return {};
-  const url = `${SITE_URL}/${locale}/author/${author.slug}`;
+  // localePrefix: "never" — see comment in layout.tsx generateMetadata.
+  const url = `${SITE_URL}/author/${author.slug}`;
   const description = author.bio
     ? author.bio.slice(0, 160)
     : `Articles and buying guides by ${author.name} at KnackCook.`;
@@ -54,7 +55,7 @@ export default async function AuthorPage({
 
   const t = await getTranslations("author");
 
-  const authorUrl = `${SITE_URL}/${locale}/author/${author.slug}`;
+  const authorUrl = `${SITE_URL}/author/${author.slug}`;
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Person",
