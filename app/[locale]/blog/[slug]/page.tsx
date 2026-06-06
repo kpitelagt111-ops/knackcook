@@ -48,7 +48,7 @@ export default async function ArticlePage({
     "@context": "https://schema.org",
     "@type": "Article",
     headline: a.title,
-    author: { "@type": "Person", name: a.author.name },
+    author: { "@type": "Organization", name: a.author.name },
     datePublished: a.publishedAt?.toISOString(),
   };
 

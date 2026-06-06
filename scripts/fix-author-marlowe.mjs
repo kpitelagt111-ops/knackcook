@@ -1,12 +1,11 @@
 #!/usr/bin/env node
 /**
- * Fix the Marlowe Finch author record:
- *   1. Set Author.name = "Marlowe Finch" (was "marlowe-finch" — slug leaked).
- *   2. Upsert AuthorTranslation(locale="en") with an honest research-analyst bio
- *      so the page renders a bio AND the JSON-LD Person schema gets a description.
+ * Set the KnackCook brand author record (byline = "By KnackCook"):
+ *   1. Set Author.name = "KnackCook" (brand byline, no fabricated individual).
+ *   2. Upsert AuthorTranslation(locale="en") with an honest brand bio
+ *      so the page renders a bio AND the JSON-LD gets a description.
  *
- * Idempotent — safe to re-run. Required for E-E-A-T credibility before Google
- * indexes the published articles.
+ * Idempotent — safe to re-run. The author slug stays "marlowe-finch" (record key).
  *
  * Usage:
  *   DATABASE_URL="postgresql://..." node scripts/fix-author-marlowe.mjs
@@ -21,12 +20,11 @@ if (!process.env.DATABASE_URL) {
 const prisma = new PrismaClient();
 
 const SLUG = "marlowe-finch";
-const NAME = "Marlowe Finch";
+const NAME = "KnackCook";
 const BIO_EN =
-  "Marlowe Finch is the research analyst behind KnackCook's buying guides. " +
-  "Marlowe doesn't test in a home kitchen — instead, every recommendation " +
-  "triangulates manufacturer specifications, long-term owner reports, and " +
-  "verified expert reviews. Methodology and sourcing are published for every guide.";
+  "KnackCook is a research-first cookware site. Instead of one editor with one pan, " +
+  "our recommendations triangulate manufacturer specifications, long-term owner reports, " +
+  "and verified expert reviews — and a human signs off on every guide.";
 
 async function main() {
   const author = await prisma.author.findUnique({ where: { slug: SLUG } });

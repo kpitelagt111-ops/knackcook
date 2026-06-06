@@ -25,13 +25,13 @@ export async function generateMetadata({
     ? author.bio.slice(0, 160)
     : `Articles and buying guides by ${author.name} at KnackCook.`;
   return {
-    title: `${author.name} — Editor`,
+    title: { absolute: `${author.name} — Editorial` },
     description,
     alternates: { canonical: url },
     openGraph: {
-      type: "profile",
+      type: "website",
       url,
-      title: `${author.name} — Editor at KnackCook`,
+      title: `${author.name} — Editorial`,
       description,
     },
   };
@@ -55,32 +55,26 @@ export default async function AuthorPage({
 
   const t = await getTranslations("author");
 
-  const authorUrl = `${SITE_URL}/author/${author.slug}`;
+  // KnackCook publishes under its brand (not a fabricated individual), so the
+  // byline entity is an Organization, not a Person.
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "Person",
+    "@type": "Organization",
     name: author.name,
-    url: authorUrl,
+    url: SITE_URL,
+    logo: author.avatarPath
+      ? author.avatarPath.startsWith("http")
+        ? author.avatarPath
+        : `${SITE_URL}${author.avatarPath}`
+      : `${SITE_URL}/icon.png`,
     ...(author.bio ? { description: author.bio } : {}),
-    ...(author.avatarPath
-      ? {
-          image: author.avatarPath.startsWith("http")
-            ? author.avatarPath
-            : `${SITE_URL}${author.avatarPath}`,
-        }
-      : {}),
-    jobTitle: "Research Analyst",
     knowsAbout: [
+      "Non-toxic cookware",
+      "PFAS-free cookware",
+      "Ceramic nonstick cookware",
       "Cast iron cookware",
-      "Kitchenware reviews",
       "Cookware buying guides",
-      "Glass-top and induction cooking",
     ],
-    worksFor: {
-      "@type": "Organization",
-      name: "KnackCook",
-      url: SITE_URL,
-    },
   };
 
   return (
@@ -105,7 +99,7 @@ export default async function AuthorPage({
             <div className="space-y-3">
               <span className="inline-flex items-center gap-2 text-[0.7rem] font-medium uppercase tracking-[0.22em] text-ember-600">
                 <span className="rule-ember" />
-                Editor
+                Editorial
               </span>
               <h1 className="font-display text-4xl font-medium leading-tight tracking-tight text-foreground sm:text-5xl">
                 {author.name}

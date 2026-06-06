@@ -107,7 +107,9 @@ test.describe("JSON-LD on product page", () => {
 });
 
 test.describe("JSON-LD on blog article", () => {
-  test("blog article emits Article (with Person author) + BreadcrumbList", async ({ page }) => {
+  test("blog article emits Article (with Organization author) + BreadcrumbList", async ({
+    page,
+  }) => {
     const response = await page.goto("/blog/best-stand-mixers-2026");
     expect(response?.status()).toBeLessThan(400);
 
@@ -119,7 +121,7 @@ test.describe("JSON-LD on blog article", () => {
 
     const author = (article as JsonLdNode).author as JsonLdNode | undefined;
     expect(author, "Article author missing").toBeDefined();
-    expect(hasType(author as JsonLdNode, "Person")).toBe(true);
+    expect(hasType(author as JsonLdNode, "Organization")).toBe(true);
     expect(typeof (author as JsonLdNode).name).toBe("string");
 
     const crumbs = nodes.find((n) => hasType(n, "BreadcrumbList"));
