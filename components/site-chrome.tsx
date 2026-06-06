@@ -8,13 +8,18 @@ import { NewsletterForm } from "./newsletter-form";
 function Logo() {
   return (
     <span className="inline-flex items-center gap-2.5">
-      <span
-        aria-hidden
-        className="relative inline-flex size-9 items-center justify-center rounded-full bg-cocoa-700 text-cream-50 shadow-soft"
-      >
-        <span className="absolute inset-0.5 rounded-full bg-gradient-to-br from-ember-400 to-ember-600 opacity-90" />
-        <span className="relative font-display text-base font-semibold leading-none">K</span>
-      </span>
+      {/* Real brand logo — colored mark on light bg, cream on dark.
+          Plain <img>: next/image rejects SVG without dangerouslyAllowSVG, and a
+          ~4 KB logo needs no optimization. */}
+      {/* biome-ignore lint/performance/noImgElement: trusted local SVG logo, no optimization needed */}
+      <img src="/brand/kk-logo.svg" alt="KnackCook" className="block h-10 w-auto dark:hidden" />
+      {/* biome-ignore lint/performance/noImgElement: trusted local SVG logo, no optimization needed */}
+      <img
+        src="/brand/kk-logo-light.svg"
+        alt=""
+        aria-hidden="true"
+        className="hidden h-10 w-auto dark:block"
+      />
       <span className="flex flex-col leading-none">
         <span className="font-display text-lg font-medium tracking-tight text-foreground">
           KnackCook
