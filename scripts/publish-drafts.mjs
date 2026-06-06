@@ -58,10 +58,10 @@ async function main() {
   }
   console.log(`Articles published: ${articlesPublished}`);
 
-  // 3. Give the auto-created author a human display name.
+  // 3. Give the auto-created author the brand display name (byline = "By KnackCook").
   await prisma.author.updateMany({
     where: { slug: AUTHOR_SLUG },
-    data: { name: "Marlowe Finch" },
+    data: { name: "KnackCook" },
   });
 
   // 4. Order the categories so the homepage grid reads naturally.

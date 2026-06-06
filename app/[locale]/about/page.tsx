@@ -95,13 +95,10 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
 
             <h2>Who&rsquo;s behind it</h2>
             <p>
-              KnackCook&rsquo;s research is led by{" "}
-              <a href="/author/marlowe-finch">
-                <strong>Marlowe Finch</strong>
-              </a>
-              , our research analyst. The process analyzes owner reviews, manufacturer
-              specifications, and real-world community reports to find what actually holds up
-              &mdash; and a human editor makes the final call on every recommendation.
+              KnackCook is produced by a small editorial team. We don&rsquo;t lab-test &mdash; our
+              research process analyzes owner reviews, manufacturer specifications, and real-world
+              community reports to find what actually holds up, and a human editor makes the final
+              call on every recommendation.
             </p>
 
             <h2>How we&rsquo;re funded</h2>

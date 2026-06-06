@@ -133,13 +133,10 @@ export default async function HowWeResearchPage({
 
             <h2>Who writes this</h2>
             <p>
-              KnackCook&rsquo;s research is led by{" "}
-              <a href="/author/marlowe-finch">
-                <strong>Marlowe Finch</strong>
-              </a>
-              , our research analyst. We don&rsquo;t lab-test &mdash; Marlowe and our research
-              process analyze thousands of verified owner reviews, manufacturer specifications, and
-              real-world community reports to find what actually holds up on modern stovetops.
+              KnackCook&rsquo;s research is produced by our <a href="/about">editorial team</a>. We
+              don&rsquo;t lab-test &mdash; our research process analyzes thousands of verified owner
+              reviews, manufacturer specifications, and real-world community reports to find what
+              actually holds up on modern stovetops.
             </p>
           </article>
         </Container>
