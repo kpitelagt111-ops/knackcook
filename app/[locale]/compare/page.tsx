@@ -1,9 +1,19 @@
+import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
 import { AmazonCTA } from "@/components/amazon-cta";
 import { ProductImage } from "@/components/product-image";
 import { db } from "@/lib/db";
 
 export const dynamic = "force-dynamic"; // SSR — selection via ?ids=
+
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: "Compare products",
+    alternates: { canonical: "/compare" },
+    // Utility tool, query-driven — keep it out of the index (no thin/duplicate pages).
+    robots: { index: false, follow: true },
+  };
+}
 
 interface CompareRow {
   slug: string;
@@ -63,7 +73,7 @@ export default async function ComparePage({
       <h1 className="text-2xl font-bold">Compare products</h1>
       {products.length < 2 ? (
         <p className="mt-4 text-sm text-muted">
-          Select 2 to 4 products to compare (e.g. <code>?ids=slug-a,slug-b</code>).
+          Pick up to four products from their review pages to compare them side by side.
         </p>
       ) : (
         <div className="reveal mt-6 overflow-x-auto" data-reveal>

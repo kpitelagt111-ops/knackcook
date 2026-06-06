@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { ProductCard } from "@/components/product-card";
 import { Button } from "@/components/ui/button";
@@ -7,6 +8,15 @@ import { SectionHeading } from "@/components/ui/section-heading";
 import { searchProducts } from "@/lib/products/queries";
 
 export const dynamic = "force-dynamic"; // SSR live search
+
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: "Search",
+    alternates: { canonical: "/search" },
+    // Search results are thin/duplicative — standard practice to keep them out of the index.
+    robots: { index: false, follow: true },
+  };
+}
 
 export default async function SearchPage({
   params,

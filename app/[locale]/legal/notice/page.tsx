@@ -6,7 +6,7 @@ import { SectionHeading } from "@/components/ui/section-heading";
 export const revalidate = 86400;
 
 export async function generateMetadata(): Promise<Metadata> {
-  return { title: "Legal Notice" };
+  return { title: "Legal Notice", alternates: { canonical: "/legal/notice" } };
 }
 
 export default async function LegalNoticePage({ params }: { params: Promise<{ locale: string }> }) {
