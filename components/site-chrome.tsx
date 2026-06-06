@@ -8,9 +8,12 @@ import { NewsletterForm } from "./newsletter-form";
 function Logo() {
   return (
     <span className="inline-flex items-center gap-2.5">
-      {/* Real brand logo. SVG, so plain <img> — next/image rejects SVG unless
-          dangerouslyAllowSVG is enabled. Colored mark on light bg, cream on dark. */}
+      {/* Real brand logo — colored mark on light bg, cream on dark.
+          Plain <img>: next/image rejects SVG without dangerouslyAllowSVG, and a
+          ~4 KB logo needs no optimization. */}
+      {/* biome-ignore lint/performance/noImgElement: trusted local SVG logo, no optimization needed */}
       <img src="/brand/kk-logo.svg" alt="KnackCook" className="block h-10 w-auto dark:hidden" />
+      {/* biome-ignore lint/performance/noImgElement: trusted local SVG logo, no optimization needed */}
       <img
         src="/brand/kk-logo-light.svg"
         alt=""
