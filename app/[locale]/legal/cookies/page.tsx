@@ -6,7 +6,7 @@ import { SectionHeading } from "@/components/ui/section-heading";
 export const revalidate = 86400;
 
 export async function generateMetadata(): Promise<Metadata> {
-  return { title: "Cookie Policy" };
+  return { title: "Cookie Policy", alternates: { canonical: "/legal/cookies" } };
 }
 
 export default async function CookiePolicyPage({

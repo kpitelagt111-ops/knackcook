@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { HeroParallax } from "@/components/hero-parallax";
 import { ProductCard } from "@/components/product-card";
@@ -9,6 +10,10 @@ import { getPublishedArticles } from "@/lib/blog/queries";
 import { getCategories, getPublishedProducts } from "@/lib/products/queries";
 
 export const revalidate = 3600; // ISR 1h (REQ §9)
+
+export async function generateMetadata(): Promise<Metadata> {
+  return { alternates: { canonical: "/" } };
+}
 
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;

@@ -48,14 +48,11 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   await params;
-  // localePrefix: "never" — all URLs are unprefixed at runtime. Canonical and
-  // hreflang must match the actually-served URLs (else canonical points to a
-  // redirect and Google de-prioritises the page). Revisit if a 2nd locale is
-  // added and localePrefix flips to "as-needed".
-  const languages: Record<string, string> = {};
-  for (const l of routing.locales) {
-    languages[l] = SITE_URL;
-  }
+  // No root-level canonical: a default canonical here makes every page that
+  // doesn't override `alternates` self-canonicalise to the homepage, so Google
+  // treats /blog, /compare, /legal/*, etc. as duplicates of /. Each page sets
+  // its own `alternates.canonical`. Single-locale (localePrefix "never") so no
+  // hreflang is emitted.
   return {
     metadataBase: new URL(SITE_URL),
     title: {
@@ -63,10 +60,6 @@ export async function generateMetadata({
       template: "%s | KnackCook",
     },
     description: "Honest editorial reviews and buying guides for the best kitchen gear.",
-    alternates: {
-      canonical: SITE_URL,
-      languages,
-    },
   };
 }
 

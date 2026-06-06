@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Breadcrumb } from "@/components/breadcrumb";
@@ -8,6 +9,15 @@ import { db } from "@/lib/db";
 import { getProductsByCategory } from "@/lib/products/queries";
 
 export const dynamic = "force-dynamic"; // SSR (filters/pagination) — REQ §4
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string; slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  return { alternates: { canonical: `/category/${slug}` } };
+}
 
 export default async function CategoryPage({
   params,

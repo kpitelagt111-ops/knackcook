@@ -10,6 +10,7 @@ export async function generateMetadata(): Promise<Metadata> {
     title: "How We Research",
     description:
       "KnackCook is a research-first site. Here's exactly how we evaluate cookware — what we do, what we don't, and why that produces honest recommendations.",
+    alternates: { canonical: "/how-we-research" },
   };
 }
 

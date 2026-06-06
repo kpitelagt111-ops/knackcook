@@ -6,7 +6,7 @@ import { SectionHeading } from "@/components/ui/section-heading";
 export const revalidate = 86400;
 
 export async function generateMetadata(): Promise<Metadata> {
-  return { title: "Affiliate Disclosure" };
+  return { title: "Affiliate Disclosure", alternates: { canonical: "/affiliate-disclosure" } };
 }
 
 export default async function AffiliateDisclosurePage({

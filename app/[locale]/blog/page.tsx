@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Container } from "@/components/ui/container";
 import { SectionHeading } from "@/components/ui/section-heading";
@@ -5,6 +6,15 @@ import { Link } from "@/i18n/navigation";
 import { getPublishedArticles } from "@/lib/blog/queries";
 
 export const revalidate = 3600; // ISR 1h
+
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: "Guides & Reviews",
+    description:
+      "Honest cookware guides and reviews — ceramic nonstick, PFAS-free cookware, cast iron, and more.",
+    alternates: { canonical: "/blog" },
+  };
+}
 
 const monthFormat = new Intl.DateTimeFormat("en", {
   month: "short",

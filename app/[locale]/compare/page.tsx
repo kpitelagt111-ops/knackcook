@@ -1,9 +1,14 @@
+import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
 import { AmazonCTA } from "@/components/amazon-cta";
 import { ProductImage } from "@/components/product-image";
 import { db } from "@/lib/db";
 
 export const dynamic = "force-dynamic"; // SSR — selection via ?ids=
+
+export async function generateMetadata(): Promise<Metadata> {
+  return { title: "Compare products", alternates: { canonical: "/compare" } };
+}
 
 interface CompareRow {
   slug: string;
