@@ -28,6 +28,9 @@ RUN npm install -g prisma@6.16.0 --no-audit --no-fund
 
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+# Next.js standalone output does NOT bundle /public — copy it explicitly so
+# static assets (logo, article images, favicon, OG images) are served.
+COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder --chown=nextjs:nodejs /app/scripts ./scripts
 
