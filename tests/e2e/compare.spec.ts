@@ -34,7 +34,7 @@ test.describe("public compare", () => {
   test("compare with <2 slugs renders the hint instead of the table", async ({ page }) => {
     const response = await page.goto("/compare?ids=artisancraft-compactpro-hand-mixer");
     expect(response?.status()).toBeLessThan(400);
-    await expect(page.getByText(/Select 2 to 4 products/i)).toBeVisible();
+    await expect(page.getByText(/Pick up to four products/i)).toBeVisible();
     // Table is intentionally absent.
     await expect(page.getByRole("table")).toHaveCount(0);
   });
