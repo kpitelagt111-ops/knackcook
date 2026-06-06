@@ -11,8 +11,31 @@ import { getCategories, getPublishedProducts } from "@/lib/products/queries";
 
 export const revalidate = 3600; // ISR 1h (REQ §9)
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://knackcook.com";
+const HOME_TITLE = "KnackCook — Honest Cookware Reviews & Buying Guides";
+const HOME_DESC =
+  "Research-first cookware reviews and buying guides — honest verdicts scored out of 10, from cast iron to PFAS-free ceramic nonstick.";
+
 export async function generateMetadata(): Promise<Metadata> {
-  return { alternates: { canonical: "/" } };
+  return {
+    title: { absolute: HOME_TITLE },
+    description: HOME_DESC,
+    alternates: { canonical: "/" },
+    openGraph: {
+      type: "website",
+      url: "/",
+      siteName: "KnackCook",
+      title: HOME_TITLE,
+      description: HOME_DESC,
+      images: [{ url: "/icon.png", width: 512, height: 512, alt: "KnackCook" }],
+    },
+    twitter: {
+      card: "summary",
+      title: HOME_TITLE,
+      description: HOME_DESC,
+      images: ["/icon.png"],
+    },
+  };
 }
 
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
@@ -28,8 +51,42 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
 
   const heroProducts = products.slice(0, 3);
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": `${SITE_URL}/#organization`,
+        name: "KnackCook",
+        url: SITE_URL,
+        logo: `${SITE_URL}/icon.png`,
+        description: HOME_DESC,
+      },
+      {
+        "@type": "WebSite",
+        "@id": `${SITE_URL}/#website`,
+        name: "KnackCook",
+        url: SITE_URL,
+        publisher: { "@id": `${SITE_URL}/#organization` },
+        potentialAction: {
+          "@type": "SearchAction",
+          target: {
+            "@type": "EntryPoint",
+            urlTemplate: `${SITE_URL}/search?q={search_term_string}`,
+          },
+          "query-input": "required name=search_term_string",
+        },
+      },
+    ],
+  };
+
   return (
     <main className="overflow-hidden">
+      <script
+        type="application/ld+json"
+        // biome-ignore lint/security/noDangerouslySetInnerHtml: JSON-LD structured data is trusted
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       {/* ============= HERO ============= */}
       <section
         aria-labelledby="hero-title"

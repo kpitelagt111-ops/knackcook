@@ -39,7 +39,6 @@ export function SiteHeader() {
   const links: { href: string; label: string }[] = [
     { href: "/", label: "Home" },
     { href: "/blog", label: tNav("guides") },
-    { href: "/compare", label: tNav("compare") },
     { href: "/wishlist", label: tNav("wishlist") },
   ];
 
@@ -158,11 +157,6 @@ export function SiteFooter() {
               <li>
                 <Link href="/blog" className="hover:text-ember-600 dark:hover:text-ember-300">
                   {tNav("guides")}
-                </Link>
-              </li>
-              <li>
-                <Link href="/compare" className="hover:text-ember-600 dark:hover:text-ember-300">
-                  {tNav("compare")}
                 </Link>
               </li>
               <li>
