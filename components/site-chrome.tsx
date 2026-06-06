@@ -178,6 +178,11 @@ export function SiteFooter() {
             </h3>
             <ul className="space-y-2.5 text-sm">
               <li>
+                <Link href="/about" className="hover:text-ember-600 dark:hover:text-ember-300">
+                  {tFooter("about")}
+                </Link>
+              </li>
+              <li>
                 <Link
                   href="/how-we-research"
                   className="hover:text-ember-600 dark:hover:text-ember-300"

@@ -47,6 +47,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.8,
     });
 
+    // Evergreen trust/info pages.
+    for (const info of ["/about", "/how-we-research"]) {
+      entries.push({
+        url: url(localePath(locale, info)),
+        lastModified: now,
+        changeFrequency: "monthly",
+        priority: 0.5,
+      });
+    }
+
     for (const p of products) {
       entries.push({
         url: url(localePath(locale, `/products/${p.slug}`)),
